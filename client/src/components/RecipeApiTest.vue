@@ -3,7 +3,7 @@
 		<result-card
 			v-for="(result, index) in searchNarrowed"
 			:key="index"
-			:result="result"
+			:result="result.recipe"
 		></result-card>
 	</div>
 </template>
