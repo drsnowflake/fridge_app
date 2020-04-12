@@ -15,7 +15,7 @@
             <recipe-list :recipeList='recipes' ></recipe-list>
           </div>
         </div>
-        <shopping-list :shoppingList='shoppingList' class="flex-item main-right"></shopping-list>
+        <!-- <shopping-list :shoppingList='shoppingList' class="flex-item main-right"></shopping-list> -->
     </section>
 	</div>
 </template>

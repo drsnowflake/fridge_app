@@ -28,9 +28,13 @@ export default {
     props: ['recipeSearch'],
     methods: {
         handleSearch(){
-            var newSearchString = this.searchString.replace(/ /g, ",")
-            eventBus.$emit('search-entered', newSearchString)
-            this.searchString = ""
+            var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ",")
+            var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, "+")
+            eventBus.$emit('search-entered', stringWithoutSpaces)
+            this.searchString = ""  
+
+            // chicken,eggs,chicken+breast,cucumber
+      
             
             // eventBus.$emit('search-priority', this.searchPriority)
             // this.searchPriority = ""
