@@ -3,11 +3,19 @@
     <form v-on:submit.prevent="handleSearch" >
         <label for="search_box" class="form-inline">Search: </label>
         <input type="text" id="search_box" v-model="searchString" required/>
-        <!-- <label for="search_priority" >Order by: </label>
-        <select id="search_priority" v-model="searchPriority" required>
-            <option value="newest" selected="selected">Most Recent</option>
-            <option value="relevance">Most Relevant</option>
-        </select> -->
+        <label for="dietary_choices" >Dietary Preference: </label>
+        <select id="dietary_choices" v-model="dietaryChoices" required>
+            <option value="balanced">balanced</option>
+            <option value="high protein">high protein</option>
+            <option value="low-fat">low-fat</option>
+            <option value="low-carb ">low-carb </option>
+            <option value="vegan">vegan</option>
+            <option value="vegetarian">vegetarian </option>
+            <option value="sugar-conscious">sugar-conscious</option>
+            <option value="peanut-free">peanut-free</option>
+            <option value="tree-nut-free">tree-nut-free</option>
+            <option value="alcohol-free">alcohol-free</option>
+        </select>
         <input type="submit" value ="Search" class="button"/>
     </form>
   </div>
@@ -21,8 +29,8 @@ export default {
     name: 'recipe-search',
     data(){
         return{
-            searchString: ""
-            // searchPriority: ""
+            searchString: "",
+            dietaryChoices: ""
         }
     },
     props: ['recipeSearch'],
@@ -32,12 +40,9 @@ export default {
             var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, "+")
             eventBus.$emit('search-entered', stringWithoutSpaces)
             this.searchString = ""  
-
-            // chicken,eggs,chicken+breast,cucumber
       
-            
-            // eventBus.$emit('search-priority', this.searchPriority)
-            // this.searchPriority = ""
+            eventBus.$emit('dietary-choices', this.dietaryChoices)
+            this.dietaryChoices = ""
         }
     }
 

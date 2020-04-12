@@ -1,8 +1,14 @@
 <template>
 	<div>
-		<li v-on:click="handleClick">
+		<li class="recipe-item" v-on:click="handleClick">
 			<h3>{{ recipe.recipe.label }}</h3>
-		<p>Sound good?</p>
+            <img :src=recipe.recipe.image alt="recipe image ">
+            <p> Find the full recipe <a :href=recipe.recipe.url target="_blank" rel="noreferrer noopener">here</a></p>
+            <h4>Ingredients</h4>
+            <ul>
+                <li v-for="(ingredient, index) in recipe.recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
+            </ul>
+            <button v-on:click="addToFavourites">Add to Favourites</button>
 		</li>
 	</div>
 </template>
@@ -16,7 +22,10 @@ export default {
 	methods: {
 		handleClick(){
 			eventBus.$emit('recipe-selected', this.recipe)
-		}
+        },
+        addToFavourites(){
+            eventBus.$emit('new-favourite', this.recipe)
+        }
 	}
 };
 
@@ -33,14 +42,13 @@ h3{
       margin-bottom: 3px;
       margin-top: 3px;
   }
-  li{
+  .recipe-item{
       list-style-type: none;
       border: #052962 solid 2px;
       margin: 10px;
       padding: 0px 5px 5px 5px;
       background-color: lightgray;
       border-radius: 20px;
-
   }
 
   li:hover{
@@ -53,4 +61,13 @@ h3{
       margin: 0px;
       border: 0px;
   }
+
+  .button {
+  padding: 10px 20px;
+  border: 1px solid #052962;
+  color: black;
+  margin: 0px 20px 0px 10px;
+  font-size: 1em;
+
+}
 </style>

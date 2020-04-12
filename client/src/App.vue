@@ -35,7 +35,8 @@ export default {
       selectedRecipe: null,
       recipeDetail: null,
       searchString: "",
-    //   orderPriority: ""
+      dietaryChoice: "",
+      newFavourite: null
     }
   },
   mounted(){
@@ -49,9 +50,13 @@ export default {
       this.searchString = search
     })
 
-    // eventBus.$on('search-priority', (priority) => {
-    // this.orderPriority = priority
-    // })
+    eventBus.$on('dietary-choices', (choice) => {
+    this.dietaryChoice = choice
+    })
+
+    eventBus.$on('new-favourite', (recipe) => {
+    this.newFavourite = recipe
+    })
     
   },
   watch: {
