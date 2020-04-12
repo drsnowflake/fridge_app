@@ -4,11 +4,16 @@
         <label for="search_box" class="form-inline">Search: </label>
         <input type="text" id="search_box" v-model="searchString" required/>
         <label for="dietary_choices" >Dietary Preference: </label>
-        <select id="dietary_choices" v-model="dietaryChoices" required>
+        <select id="dietary_choices" v-model="dietaryChoices">
+            <option value="none">none</option>
             <option value="balanced">balanced</option>
             <option value="high protein">high protein</option>
             <option value="low-fat">low-fat</option>
             <option value="low-carb ">low-carb </option>
+        </select>
+        <label for="health_choices" >Health Preference: </label>
+        <select id="health_choices" v-model="healthChoices">
+            <option value="none">none</option>
             <option value="vegan">vegan</option>
             <option value="vegetarian">vegetarian </option>
             <option value="sugar-conscious">sugar-conscious</option>
@@ -30,7 +35,8 @@ export default {
     data(){
         return{
             searchString: "",
-            dietaryChoices: ""
+            dietaryChoices: 'none',
+            healthChoices: 'none'
         }
     },
     props: ['recipeSearch'],
@@ -38,11 +44,15 @@ export default {
         handleSearch(){
             var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ",")
             var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, "+")
-            eventBus.$emit('search-entered', stringWithoutSpaces)
-            this.searchString = ""  
-      
+          
             eventBus.$emit('dietary-choices', this.dietaryChoices)
-            this.dietaryChoices = ""
+            this.dietaryChoices = 'none'
+
+            eventBus.$emit('health-choices', this.healthChoices)
+            this.healthChoices = 'none'
+
+             eventBus.$emit('search-entered', stringWithoutSpaces)
+            this.searchString = "" 
         }
     }
 

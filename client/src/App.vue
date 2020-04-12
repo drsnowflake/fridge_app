@@ -12,7 +12,7 @@
             <!-- <h2>{{subHeadingToDisplay}}</h2> -->
           </div>
           <div>
-            <recipe-list :recipeList='recipes' ></recipe-list>
+            <recipe-list :favourites='favouriteRecipes' :recipeList='recipes' ></recipe-list>
           </div>
         </div>
         <!-- <shopping-list :shoppingList='shoppingList' class="flex-item main-right"></shopping-list> -->
@@ -24,6 +24,7 @@
 import RecipeSearch from './components/RecipeSearch.vue';
 import RecipeList from './components/RecipeList.vue';
 import ShoppingList from './components/ShoppingList.vue';
+import FavouriteService from './services/FavouriteService.js';
 import { eventBus } from './main.js';
 
 export default {
@@ -36,11 +37,14 @@ export default {
       recipeDetail: null,
       searchString: "",
       dietaryChoice: "",
-      newFavourite: null
+      healthChoice: "",
+      newFavourite: null,
+      removeFavourite: null,
+      favouriteRecipes: []
     }
   },
   mounted(){
-    this.getRecipes()
+    this.fetchFavourites()
 
     eventBus.$on('recipe-selected', (recipe) => {
       this.selectedRecipe = recipe
@@ -54,18 +58,26 @@ export default {
     this.dietaryChoice = choice
     })
 
+    eventBus.$on('health-choices', (choice) => {
+    this.healthChoice = choice
+    })
+
     eventBus.$on('new-favourite', (recipe) => {
     this.newFavourite = recipe
+    })
+
+    eventBus.$on('remove-favourite', (recipe) => {
+    this.removeFavourite = recipe
     })
     
   },
   watch: {
-    // selectedArticle: function (oldValue, newValue){
-    //       fetch(`${this.selectedArticle.apiUrl}?show-fields=all&api-key=6421a937-fac8-4f40-887c-eeddc9bcda34`)
-    //       .then(results => results.json())
-    //       .then(articles => this.articleDetail = articles.response.content)
-    //       .catch(err => console.log(err))
-    // },
+    newFavourite: function (oldValue, newValue){
+       this.addNewFavourite(this.newFavourite)
+    },
+    removeFavourite: function (oldValue, newValue){
+       this.removeSelectedFavourite(this.removeFavourite)
+    },
     searchString: function (oldValue, newValue){
       this.getRecipes(this.searchString)
 
@@ -82,12 +94,44 @@ export default {
   },
   methods: {
       getRecipes(){
-        fetch(`https://api.edamam.com/search?q=chicken+breast,eggs,onions&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}&from=0&to=4&excluded=garlic&excluded=paprika`)
+        let URL = this.buildFetchURL()
+        fetch(URL)
         .then(results => results.json())
         .then(json => (this.recipes = json.hits))
         .catch(err => console.log(err))
+        },
+        buildFetchURL(){
+          let fetchURL = ''
+          let baseURL = 'https://api.edamam.com/search?'
+          if (this.searchString != ""){
+            fetchURL = baseURL + 'q=' + this.searchString 
+          }
+          if (this.dietaryChoice != 'none'){
+            fetchURL += '&diet=' + this.dietaryChoice
+          }
+          if (this.healthChoice != 'none'){
+            fetchURL += '&health=' + this.healthChoice
+          }
+          fetchURL += `&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}&from=0&to=4`
+          return fetchURL
+        },
+      fetchFavourites(){
+        FavouriteService.getFavourites()
+        .then((res) => (this.favouriteRecipes = res))
+    },
+      addNewFavourite(recipe){
+        let payload = {
+          "name": recipe.recipe.label,
+          "recipe_uri": recipe.recipe.uri
         }
-    }
+        FavouriteService.addFavourite(payload)
+      },
+      removeSelectedFavourite(recipe){
+        let id = recipe._id
+        FavouriteService.removeFavourite(id)
+      }
+    },
+    
 }
 </script>
 

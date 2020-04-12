@@ -8,7 +8,8 @@
             <ul>
                 <li v-for="(ingredient, index) in recipe.recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
             </ul>
-            <button v-on:click="addToFavourites">Add to Favourites</button>
+            <button v-if="!favouritesCheck()" v-on:click="addToFavourites()">Add to Favourites</button>
+            <button v-if="favouritesCheck()" v-on:click="removeFromFavourites()">Remove from Favourites</button>
 		</li>
 	</div>
 </template>
@@ -18,17 +19,30 @@ import { eventBus } from '../main.js';
 
 export default {
 	name: "recipe-item",
-	props: ['recipe'],
+    props: ['recipe', 'favourites'],
 	methods: {
+        favouritesCheck: function () {
+             let match = false
+             this.favourites.forEach(element => { 
+            if (element.recipe_uri === this.recipe.recipe.uri){
+                this.recipe._id = element._id 
+                match = true
+            } 
+        });
+        return match
+      },
 		handleClick(){
 			eventBus.$emit('recipe-selected', this.recipe)
         },
         addToFavourites(){
             eventBus.$emit('new-favourite', this.recipe)
+        },
+        removeFromFavourites(){
+            eventBus.$emit('remove-favourite', this.recipe)
         }
-	}
-};
-
+	
+}
+}
 </script>
 
 <style scoped>
