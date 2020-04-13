@@ -25,6 +25,7 @@
         </select>
         <input type="submit" value ="Search" class="button"/>
     </form>
+
   </div>
 </template>
 

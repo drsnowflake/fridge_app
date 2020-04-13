@@ -4,7 +4,10 @@
     <section class="main-container">
       <div class="center">
         <recipe-search :recipeSearch='searchString' ></recipe-search>
-      </div>  
+      </div> 
+      <div>
+        <favourite-select :favourites='favouriteRecipes'></favourite-select>
+      </div> 
     </section>
     <section class="main-container">
         <div class="flex-item main-left">
@@ -24,6 +27,7 @@
 import RecipeSearch from './components/RecipeSearch.vue';
 import RecipeList from './components/RecipeList.vue';
 import ShoppingList from './components/ShoppingList.vue';
+import FavouriteSelect from './components/FavouriteSelect.vue'
 import FavouriteService from './services/FavouriteService.js';
 import { eventBus } from './main.js';
 
@@ -41,7 +45,9 @@ export default {
       healthChoice: "",
       newFavourite: null,
       removeFavourite: null,
-      favouriteRecipes: []
+      favouriteRecipes: [],
+      selectedFavourite: "",
+      recipe: []
     }
   },
   mounted(){
@@ -55,7 +61,7 @@ export default {
       this.searchString = search
     })
 
-    eventBus.$on('exclusion-entered', (exludedIngredients) => {
+    eventBus.$on('exclusion-entered', (excludedIngredients) => {
       this.exclusionsArray = excludedIngredients
     })
 
@@ -75,6 +81,9 @@ export default {
     this.removeFavourite = recipe
     })
     
+    eventBus.$on('favourite-selected', (favourite) => {
+    this.selectedFavourite = favourite
+    })
   },
   watch: {
     newFavourite: function (oldValue, newValue){
@@ -85,41 +94,49 @@ export default {
     },
     searchString: function (oldValue, newValue){
       this.getRecipes()
-
     },
-    exclusionsArray: function (oldValue, newValue){
-      this.getRecipes()
-
+    selectedFavourite: function (oldValue, newValue){
+      this.getFavourite()
     }
-    // orderPriority: function (oldValue, newValue){
-    //   this.getRecipes(this.searchString)
-
+    // exclusionsArray: function (oldValue, newValue){
+    //   this.getRecipes()
     // }
   },
   components: {
     "recipe-search": RecipeSearch,
     "recipe-list": RecipeList,
-    "shopping-list": ShoppingList
+    "shopping-list": ShoppingList,
+    'favourite-select': FavouriteSelect
   },
   methods: {
+      getFavourite(){
+        let fetchURL = ''
+        const splitURI = this.selectedFavourite.split('#')
+            fetchURL += 'https://api.edamam.com/search?r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23' + splitURI[1] + `&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}`
+        console.log(fetchURL)
+        fetch(fetchURL)
+        .then(res => res.json())
+        .then(json => (this.recipe.push(json[0])))
+        .then(console.log(this.recipe))
+        .catch(err => console.log(err))
+      },
       getRecipes(){
         let URL = this.buildFetchURL()
+        console.log(URL)
         fetch(URL)
         .then(results => results.json())
         .then(json => (this.recipes = json.hits))
         .catch(err => console.log(err))
         },
         buildFetchURL(){
-          let fetchURL = ''
-          let baseURL = 'https://api.edamam.com/search?'
+          let fetchURL = 'https://api.edamam.com/search?'
           if (this.searchString != ""){
-            fetchURL = baseURL + 'q=' + this.searchString 
+            fetchURL += 'q=' + this.searchString 
           }
           if (this.exclusionsArray.length > 0){
            this.exclusionsArray.forEach(ingredient =>{
-                fetchURL += '&exluded=' + ingredient
-                console.log(ingredient)
-            } )
+                fetchURL += '&excluded=' + ingredient
+                } )
           }
           if (this.dietaryChoice != 'none'){
             fetchURL += '&diet=' + this.dietaryChoice
@@ -127,7 +144,7 @@ export default {
           if (this.healthChoice != 'none'){
             fetchURL += '&health=' + this.healthChoice
           }
-          fetchURL += `&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}&from=0&to=4`
+          fetchURL += `&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}`
           return fetchURL
         },
       fetchFavourites(){
