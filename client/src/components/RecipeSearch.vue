@@ -44,7 +44,6 @@ export default {
             healthChoices: 'none'
         }
     },
-    props: ['recipeSearch'],
     methods: {
         handleSearch(){
             var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ",")

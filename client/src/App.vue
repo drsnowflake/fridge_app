@@ -3,10 +3,10 @@
     <h1>Fridge App</h1>
     <section class="main-container">
       <div class="center">
-        <recipe-search :recipeSearch='searchString' ></recipe-search>
+        <recipe-search></recipe-search>
       </div> 
       <div>
-        <favourite-select :favourites='favouriteRecipes'></favourite-select>
+        <favourite-select :favourites='favouriteRecipes' :key="componentKey"></favourite-select>
       </div> 
     </section>
     <section class="main-container">
@@ -15,7 +15,7 @@
             <!-- <h2>{{subHeadingToDisplay}}</h2> -->
           </div>
           <div>
-            <recipe-list :favourites='favouriteRecipes' :recipeList='recipes' ></recipe-list>
+            <recipe-list :favourites='favouriteRecipes' :recipeList='recipes' :key="componentKey" ></recipe-list>
           </div>
         </div>
         <!-- <shopping-list :shoppingList='shoppingList' class="flex-item main-right"></shopping-list> -->
@@ -47,7 +47,7 @@ export default {
       removeFavourite: null,
       favouriteRecipes: [],
       selectedFavourite: "",
-      recipe: []
+      componentKey: 0
     }
   },
   mounted(){
@@ -109,23 +109,27 @@ export default {
     'favourite-select': FavouriteSelect
   },
   methods: {
+      forceRender() {
+        this.componentKey += 1
+      },
       getFavourite(){
+        this.recipes = []
         let fetchURL = ''
         const splitURI = this.selectedFavourite.split('#')
             fetchURL += 'https://api.edamam.com/search?r=http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23' + splitURI[1] + `&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}`
         console.log(fetchURL)
         fetch(fetchURL)
         .then(res => res.json())
-        .then(json => (this.recipe.push(json[0])))
-        .then(console.log(this.recipe))
+        .then(json => (this.recipes.push(json[0])))
         .catch(err => console.log(err))
       },
       getRecipes(){
+        this.recipes = []
         let URL = this.buildFetchURL()
         console.log(URL)
         fetch(URL)
         .then(results => results.json())
-        .then(json => (this.recipes = json.hits))
+        .then(json => json.hits.forEach(recipe => this.recipes.push(recipe.recipe)))
         .catch(err => console.log(err))
         },
         buildFetchURL(){
@@ -153,10 +157,14 @@ export default {
     },
       addNewFavourite(recipe){
         let payload = {
-          "name": recipe.recipe.label,
-          "recipe_uri": recipe.recipe.uri
+          "name": recipe.label,
+          "recipe_uri": recipe.uri
         }
         FavouriteService.addFavourite(payload)
+        this.fetchFavourites()
+        .then(this.forceRender())
+        
+        // this.forceRender()
       },
       removeSelectedFavourite(recipe){
         let id = recipe._id

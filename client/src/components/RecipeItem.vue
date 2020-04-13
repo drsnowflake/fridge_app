@@ -1,14 +1,15 @@
 <template>
 	<div>
 		<li class="recipe-item" v-on:click="handleClick">
-			<h3>{{ recipe.recipe.label }}</h3>
-            <img :src=recipe.recipe.image alt="recipe image ">
-            <p> Find the full recipe <a :href=recipe.recipe.url target="_blank" rel="noreferrer noopener">here</a></p>
+			<h3>{{ recipe.label }}</h3>
+            <img :src=recipe.image alt="recipe image ">
+            <p> Find the full recipe <a :href=recipe.url target="_blank" rel="noreferrer noopener">here</a></p>
             <h4>Ingredients</h4>
             <ul>
-                <li v-for="(ingredient, index) in recipe.recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
+                <li v-for="(ingredient, index) in recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
             </ul>
-            <button v-if="!favouritesCheck()" v-on:click="addToFavourites()">Add to Favourites</button>
+            <button v-if="!favouritesCheck()" v-on:click="addToFavourites()" type="button">Add to Favourites</button>
+            <audio ref="audioElm" src="../assets/click_sound.mp3"></audio>
             <button v-if="favouritesCheck()" v-on:click="removeFromFavourites()">Remove from Favourites</button>
 		</li>
 	</div>
@@ -24,7 +25,7 @@ export default {
         favouritesCheck: function () {
              let match = false
              this.favourites.forEach(element => { 
-            if (element.recipe_uri === this.recipe.recipe.uri){
+            if (element.recipe_uri === this.recipe.uri){
                 this.recipe._id = element._id 
                 match = true
             } 
@@ -36,6 +37,7 @@ export default {
         },
         addToFavourites(){
             eventBus.$emit('new-favourite', this.recipe)
+            this.$refs.audioElm.play();
         },
         removeFromFavourites(){
             eventBus.$emit('remove-favourite', this.recipe)
