@@ -3,6 +3,8 @@
     <form v-on:submit.prevent="handleSearch" >
         <label for="search_box" class="form-inline">Search: </label>
         <input type="text" id="search_box" v-model="searchString" required/>
+        <label for="exclusion_box" class="form-inline">Exclude: </label>
+        <input type="text" id="exclusion_box" v-model="exclusionString"/>
         <label for="dietary_choices" >Dietary Preference: </label>
         <select id="dietary_choices" v-model="dietaryChoices">
             <option value="none">none</option>
@@ -35,6 +37,8 @@ export default {
     data(){
         return{
             searchString: "",
+            exclusionString: "",
+            exclusionsArray: [],
             dietaryChoices: 'none',
             healthChoices: 'none'
         }
@@ -44,6 +48,10 @@ export default {
         handleSearch(){
             var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ",")
             var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, "+")
+            
+            var exclusionStringWithoutCommaSpace = this.exclusionString.replace(/,\s?/g, ",")
+            var exclusionStringWithoutSpaces = exclusionStringWithoutCommaSpace.replace(/ /g, "+")
+            this.exclusionsArray = exclusionStringWithoutCommaSpace.split(',')
           
             eventBus.$emit('dietary-choices', this.dietaryChoices)
             this.dietaryChoices = 'none'
@@ -51,8 +59,12 @@ export default {
             eventBus.$emit('health-choices', this.healthChoices)
             this.healthChoices = 'none'
 
-             eventBus.$emit('search-entered', stringWithoutSpaces)
+            eventBus.$emit('search-entered', stringWithoutSpaces)
             this.searchString = "" 
+
+            eventBus.$emit('exclusion-entered', this.exclusionsArray)
+            this.exclusionString = ""
+            this.exclusionsArray = [] 
         }
     }
 

@@ -36,6 +36,7 @@ export default {
       selectedRecipe: null,
       recipeDetail: null,
       searchString: "",
+      exclusionsArray: [],
       dietaryChoice: "",
       healthChoice: "",
       newFavourite: null,
@@ -52,6 +53,10 @@ export default {
 
     eventBus.$on('search-entered', (search) => {
       this.searchString = search
+    })
+
+    eventBus.$on('exclusion-entered', (exludedIngredients) => {
+      this.exclusionsArray = excludedIngredients
     })
 
     eventBus.$on('dietary-choices', (choice) => {
@@ -79,13 +84,17 @@ export default {
        this.removeSelectedFavourite(this.removeFavourite)
     },
     searchString: function (oldValue, newValue){
-      this.getRecipes(this.searchString)
+      this.getRecipes()
 
     },
-    orderPriority: function (oldValue, newValue){
-      this.getRecipes(this.searchString)
+    exclusionsArray: function (oldValue, newValue){
+      this.getRecipes()
 
     }
+    // orderPriority: function (oldValue, newValue){
+    //   this.getRecipes(this.searchString)
+
+    // }
   },
   components: {
     "recipe-search": RecipeSearch,
@@ -105,6 +114,12 @@ export default {
           let baseURL = 'https://api.edamam.com/search?'
           if (this.searchString != ""){
             fetchURL = baseURL + 'q=' + this.searchString 
+          }
+          if (this.exclusionsArray.length > 0){
+           this.exclusionsArray.forEach(ingredient =>{
+                fetchURL += '&exluded=' + ingredient
+                console.log(ingredient)
+            } )
           }
           if (this.dietaryChoice != 'none'){
             fetchURL += '&diet=' + this.dietaryChoice
