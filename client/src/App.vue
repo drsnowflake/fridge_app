@@ -159,11 +159,11 @@ export default {
         }
         FavouriteService.addFavourite(payload)
           .then( res => this.favouriteRecipes.push(res) )
-        // this.fetchFavourites()
       },
       removeSelectedFavourite(recipe){
         let id = recipe._id
         FavouriteService.removeFavourite(id)
+        .then(res => this.favouriteRecipes.filter(item => item._id != id ))
       }
     },
     

@@ -37,7 +37,7 @@ export default {
         },
         addToFavourites(){
             eventBus.$emit('new-favourite', this.recipe)
-            this.$refs.audioElm.play();
+            // this.$refs.audioElm.play();
         },
         removeFromFavourites(){
             eventBus.$emit('remove-favourite', this.recipe)
