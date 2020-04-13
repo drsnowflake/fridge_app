@@ -9,7 +9,7 @@
                 <li v-for="(ingredient, index) in recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
             </ul>
             <button v-if="!favouritesCheck()" v-on:click="addToFavourites()" type="button">Add to Favourites</button>
-            <audio ref="audioElm" src="../assets/click_sound.mp3"></audio>
+            <audio ref="audioElm" src="../assets/add_to_favourites.wav"></audio>
             <button v-if="favouritesCheck()" v-on:click="removeFromFavourites()">Remove from Favourites</button>
 		</li>
 	</div>

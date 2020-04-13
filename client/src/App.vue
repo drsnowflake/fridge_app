@@ -6,7 +6,7 @@
         <recipe-search></recipe-search>
       </div> 
       <div>
-        <favourite-select :favourites='favouriteRecipes' :key="componentKey"></favourite-select>
+        <favourite-select :favourites='favouriteRecipes' :key="favouriteRecipes.length"></favourite-select>
       </div> 
     </section>
     <section class="main-container">
@@ -15,10 +15,10 @@
             <!-- <h2>{{subHeadingToDisplay}}</h2> -->
           </div>
           <div>
-            <recipe-list :favourites='favouriteRecipes' :recipeList='recipes' :key="componentKey" ></recipe-list>
+            <recipe-list :favourites='favouriteRecipes' :recipeList='recipes' :key="favouriteRecipes.length" ></recipe-list>
           </div>
         </div>
-        <!-- <shopping-list :shoppingList='shoppingList' class="flex-item main-right"></shopping-list> -->
+        <shopping-list :selectedRecipe='selectedRecipe' class="flex-item main-right"></shopping-list>
     </section>
 	</div>
 </template>
@@ -74,15 +74,15 @@ export default {
     })
 
     eventBus.$on('new-favourite', (recipe) => {
-    this.newFavourite = recipe
+      this.newFavourite = recipe
     })
 
     eventBus.$on('remove-favourite', (recipe) => {
-    this.removeFavourite = recipe
+      this.removeFavourite = recipe
     })
     
     eventBus.$on('favourite-selected', (favourite) => {
-    this.selectedFavourite = favourite
+      this.selectedFavourite = favourite
     })
   },
   watch: {
@@ -98,9 +98,6 @@ export default {
     selectedFavourite: function (oldValue, newValue){
       this.getFavourite()
     }
-    // exclusionsArray: function (oldValue, newValue){
-    //   this.getRecipes()
-    // }
   },
   components: {
     "recipe-search": RecipeSearch,
@@ -161,10 +158,8 @@ export default {
           "recipe_uri": recipe.uri
         }
         FavouriteService.addFavourite(payload)
-        this.fetchFavourites()
-        .then(this.forceRender())
-        
-        // this.forceRender()
+          .then( res => this.favouriteRecipes.push(res) )
+        // this.fetchFavourites()
       },
       removeSelectedFavourite(recipe){
         let id = recipe._id
