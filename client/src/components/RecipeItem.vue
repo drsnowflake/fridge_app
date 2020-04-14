@@ -1,17 +1,46 @@
 <template>
-	<div>
-		<li class="recipe-item" v-on:click="handleClick">
+	<div class="grid-item-recipe row" v-on:click="handleClick">
+		<div class="column left">
+			<img id="recipe_image" :src="recipe.image" alt="recipe image " />
+			<br />
+			<button
+				class="button"
+				v-if="!favouritesCheck()"
+				v-on:click="addToFavourites()"
+				type="button"
+			>
+				Add to Favourites
+			</button>
+			<audio ref="audioElm" src="../assets/add_to_favourites.wav"></audio>
+			<button
+				class="button"
+				v-if="favouritesCheck()"
+				v-on:click="removeFromFavourites()"
+			>
+				Remove from Favourites
+			</button>
+		</div>
+		<div class="column right">
 			<h3>{{ recipe.label }}</h3>
-            <img :src=recipe.image alt="recipe image ">
-            <p> Find the full recipe <a :href=recipe.url target="_blank" rel="noreferrer noopener">here</a></p>
-            <h4>Ingredients</h4>
-            <ul>
-                <li v-for="(ingredient, index) in recipe.ingredientLines" :ingredient="ingredient" :key="index">{{ ingredient }}</li>
-            </ul>
-            <button v-if="!favouritesCheck()" v-on:click="addToFavourites()" type="button">Add to Favourites</button>
-            <audio ref="audioElm" src="../assets/add_to_favourites.wav"></audio>
-            <button v-if="favouritesCheck()" v-on:click="removeFromFavourites()">Remove from Favourites</button>
-		</li>
+			<p>
+				<u><b>Ingredients </b>(serves {{ recipe.yield }})</u>
+			</p>
+			<ul>
+				<li
+					id="ingredient_list"
+					v-for="(ingredient, index) in recipe.ingredientLines"
+					:ingredient="ingredient"
+					:key="index"
+				>
+					{{ ingredient }}
+				</li>
+			</ul>
+			<br />
+			<p>
+				Find the full recipe
+				<a :href="recipe.url" target="_blank" rel="noreferrer noopener">here</a>
+			</p>
+		</div>
 	</div>
 </template>
 
@@ -19,71 +48,81 @@
 import { eventBus } from '../main.js';
 
 export default {
-	name: "recipe-item",
-    props: ['recipe', 'favourites'],
+	name: 'recipe-item',
+	props: ['recipe', 'favourites'],
 	methods: {
-        favouritesCheck: function () {
-             let match = false
-             this.favourites.forEach(element => { 
-            if (element.recipe_uri === this.recipe.uri){
-                this.recipe._id = element._id 
-                match = true
-            } 
-        });
-        return match
-      },
-		handleClick(){
-			eventBus.$emit('recipe-selected', this.recipe)
-        },
-        addToFavourites(){
-            eventBus.$emit('new-favourite', this.recipe)
-            // this.$refs.audioElm.play();
-        },
-        removeFromFavourites(){
-            eventBus.$emit('remove-favourite', this.recipe)
-        }
-	
-}
-}
+		favouritesCheck: function() {
+			let match = false;
+			this.favourites.forEach(element => {
+				if (element.recipe_uri === this.recipe.uri) {
+					this.recipe._id = element._id;
+					match = true;
+				}
+			});
+			return match;
+		},
+		handleClick() {
+			eventBus.$emit('recipe-selected', this.recipe);
+		},
+		addToFavourites() {
+			eventBus.$emit('new-favourite', this.recipe);
+			// this.$refs.audioElm.play();
+		},
+		removeFromFavourites() {
+			eventBus.$emit('remove-favourite', this.recipe);
+		}
+	}
+};
 </script>
 
 <style scoped>
-h3{
-    color: #052962;
-    font-family: "Guardian Text Egyptian Web",Georgia,serif;
-    margin: 0.5em; 
-  }
+/* li:hover {
+	background-color: silver;
+	cursor: pointer;
+} */
 
-  p{
-      margin-bottom: 3px;
-      margin-top: 3px;
-  }
-  .recipe-item{
-      list-style-type: none;
-      border: #052962 solid 2px;
-      margin: 10px;
-      padding: 0px 5px 5px 5px;
-      background-color: lightgray;
-      border-radius: 20px;
-  }
+.row {
+	display: flex;
+	text-align: center;
+}
 
-  li:hover{
-      background-color: silver;
-      cursor: pointer;
-  }
+.column {
+	float: left;
+}
 
-  .pad-left{
-      padding: 0px 10px 0px 10px;
-      margin: 0px;
-      border: 0px;
-  }
+.left {
+	width: 35%;
+	text-align: center;
+}
 
-  .button {
-  padding: 10px 20px;
-  border: 1px solid #052962;
-  color: black;
-  margin: 0px 20px 0px 10px;
-  font-size: 1em;
+.right {
+	width: 65%;
+}
 
+#recipe_image {
+	margin: 15px;
+	border: 1px;
+	border-style: solid;
+	border-color: #897475;
+}
+
+#ingredient_list {
+	list-style: none;
+	font: 10px;
+}
+
+.button {
+	vertical-align: middle;
+	padding: 5px 10px;
+	border: 1px solid #897475;
+	color: #897475;
+	margin: 0px 20px 0px 10px;
+	font-size: 1em;
+}
+
+.button:hover {
+	background-color: #897475;
+	color: white;
+	cursor: pointer;
 }
 </style>

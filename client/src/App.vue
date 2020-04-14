@@ -1,41 +1,35 @@
 <template>
-	<div>
-		<h1>Fridge App</h1>
-		<section class="main-container">
-			<div class="center">
-				<recipe-search></recipe-search>
-			</div>
-			<div>
-				<favourite-select
+	<div class="grid-container-main">
+		<div class="grid-item-heading"><h2>Recipe Finder</h2></div>
+
+		<div class="grid-item-search">
+			<recipe-search></recipe-search>
+		</div>
+		<div class="grid-item-favourites">
+			<favourite-select
+				:favourites="favouriteRecipes"
+				:key="favouriteRecipes.length"
+			></favourite-select>
+		</div>
+		<div class="grid-item-blank-line"></div>
+		<div class="grid-item-recipes">
+			<instruction-view
+				v-if="recipes.length == 0 && searchString == ''"
+			></instruction-view>
+			<no-recipe-found
+				v-if="recipes.length == 0 && searchString != '' && loaded == true"
+			></no-recipe-found>
+			<div class="grid-container-recipes">
+				<recipe-list
 					:favourites="favouriteRecipes"
+					:recipeList="recipes"
 					:key="favouriteRecipes.length"
-				></favourite-select>
+				></recipe-list>
 			</div>
-		</section>
-		<section class="main-container">
-			<div class="flex-item main-left">
-				<div class="sub-heading">
-					<!-- <h2>{{subHeadingToDisplay}}</h2> -->
-				</div>
-				<div>
-					<instruction-view
-						v-if="recipes.length == 0 && searchString == ''"
-					></instruction-view>
-					<no-recipe-found
-						v-if="recipes.length == 0 && searchString != '' && loaded == true"
-					></no-recipe-found>
-					<recipe-list
-						:favourites="favouriteRecipes"
-						:recipeList="recipes"
-						:key="favouriteRecipes.length"
-					></recipe-list>
-				</div>
-			</div>
-			<shopping-list
-				:selectedRecipe="selectedRecipe"
-				class="flex-item main-right"
-			></shopping-list>
-		</section>
+		</div>
+		<div class="grid-item-shopping-list">
+			<shopping-list :selectedRecipe="selectedRecipe"></shopping-list>
+		</div>
 	</div>
 </template>
 
@@ -203,52 +197,83 @@ export default {
 </script>
 
 <style>
+body {
+	background-color: #d7dfe0;
+}
+
+p {
+	display: inline;
+	font: 10px;
+}
+
+.grid-container-main {
+	display: grid;
+	grid-template-columns: repeat(20, 1fr);
+	grid-template-rows: repeat(100, 50px);
+	background-color: white;
+	text-align: center;
+}
+
+.grid-item-heading {
+	grid-area: 1 / 1 / span 2 / span 20;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.grid-item-search {
+	grid-area: 3 / 1 / span 1 / span 20;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.grid-item-favourites {
+	grid-area: 4 / 1 / span 1 / span 20;
+	background-color: rgba(255, 255, 255, 0);
+}
+
+.grid-item-blank-line {
+	grid-area: 5 / 1 / span 1 / span 20;
+}
+
+.grid-item-recipes {
+	grid-area: 6 / 2 / span 15 / span 12;
+	background-color: white;
+}
+
+.grid-container-recipes {
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto;
+	background-color: white;
+	grid-gap: 40px;
+	text-align: left;
+}
+.grid-item-recipe {
+	background-color: #fad4d6;
+	border: 3px solid #897475;
+	border-radius: 20px;
+	padding: 15px;
+	margin-bottom: 30px;
+}
+
+.grid-item-shopping-list {
+	grid-area: 7 / 15 / span 15 / span 5;
+	background-color: rgba(255, 255, 255, 0);
+}
+
 h1 {
-	color: #052962;
-	font-family: 'Guardian Text Egyptian Web', Georgia, serif;
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
 	text-align: center;
 	font-size: 3em;
 }
 
 h2 {
-	color: #052962;
-	font-family: 'Guardian Text Egyptian Web', Georgia, serif;
-	font-size: 1.7em;
-	margin-bottom: 0;
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
+	font-size: 2em;
 }
 
 h3 {
-	color: #052962;
-	font-family: 'Guardian Text Egyptian Web', Georgia, serif;
-}
-
-.main-container {
-	display: flex;
-	justify-content: space-between;
-	flex: 5;
-	flex-direction: row;
-}
-
-.main-left {
-	flex: 4;
-	padding: 10px;
-}
-
-.main-right {
-	flex: 1;
-	padding: 10px;
-}
-
-.center {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	border: 5px;
-	padding: 5px;
-}
-.sub-heading {
-	margin-left: auto;
-	text-align: center;
-	margin-bottom: 0;
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
 }
 </style>

@@ -1,6 +1,8 @@
 <template>
 	<div>
 		<p>No recipes found</p>
+		<br />
+		<br />
 		<p>Please check spelling and try again</p>
 	</div>
 </template>
@@ -9,4 +11,4 @@
 export default {};
 </script>
 
-<style></style>
+<style scoped></style>

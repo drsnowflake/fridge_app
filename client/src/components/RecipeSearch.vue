@@ -1,12 +1,12 @@
 <template lang="html">
-	<div class="main-container">
+	<div>
 		<form v-on:submit.prevent="handleSearch">
 			<label for="search_box" class="form-inline">Ingredients: </label>
 			<input
 				type="text"
 				id="search_box"
 				v-model="searchString"
-				placeholder="example: Chicken"
+				placeholder="eg: Chicken, Garlic"
 				required
 			/>
 			<label for="exclusion_box" class="form-inline">Exclude: </label>
@@ -14,9 +14,9 @@
 				type="text"
 				id="exclusion_box"
 				v-model="exclusionString"
-				placeholder="example: Tomato"
+				placeholder="eg: Tomato, Olive Oil"
 			/>
-			<label for="dietary_choices">Dietary Preference: </label>
+			<label for="dietary_choices">Macros: </label>
 			<select id="dietary_choices" v-model="dietaryChoices">
 				<option value="none">none</option>
 				<option value="balanced">balanced</option>
@@ -24,7 +24,7 @@
 				<option value="low-fat">low-fat</option>
 				<option value="low-carb ">low-carb </option>
 			</select>
-			<label for="health_choices">Health Preference: </label>
+			<label for="health_choices">Diet: </label>
 			<select id="health_choices" v-model="healthChoices">
 				<option value="none">none</option>
 				<option value="vegan">vegan</option>
@@ -86,56 +86,55 @@ export default {
 </script>
 
 <style scoped>
-/* input {
-  vertical-align: middle;
-  margin: 0px 20px 0px 10px;
-  padding: 10px;
-  background-color: #f8f8f8;
-  border: 1px solid #aaa;
-  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
-  color: #444;
-  font-size: 16px;
-  font-family: sans-serif;
-  font-weight: 300;
+input {
+	vertical-align: middle;
+	margin: 5px 20px 0px 10px;
+	padding: 5px;
+	background-color: #f8f8f8;
+	border: 1px solid #aaa;
+	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+	color: #444;
+	font-size: 14px;
+	font-family: sans-serif;
+	font-weight: 300;
 }
 
-label{
-    color: #052962;
-    font-size: 1.2em;
-    font-weight: bold;
-    vertical-align: middle;
+label {
+	font-size: 1.2em;
+	font-weight: bold;
+	vertical-align: middle;
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
 }
 
 .button {
-  vertical-align: middle;
-  padding: 10px 20px;
-  border: 1px solid #052962;
-  color: black;
-  margin: 0px 20px 0px 10px;
-  font-size: 1em;
-
+	vertical-align: middle;
+	padding: 5px 10px;
+	border: 1px solid #897475;
+	color: black;
+	margin: 0px 20px 0px 10px;
+	font-size: 1em;
 }
 
 .button:hover {
-  background-color: #052962;
-  color: white;
-  cursor: pointer;
+	background-color: #897475;
+	color: white;
+	cursor: pointer;
 }
 
 select {
-    vertical-align: middle;
-	font-size: 16px;
+	vertical-align: middle;
+	font-size: 14px;
 	font-family: sans-serif;
 	font-weight: 300;
 	color: #444;
 	padding: 10px;
 	margin: 0px 20px 0px 10px;
 	border: 1px solid #aaa;
-	box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
-	border-radius: .2em;
-	appearance: none;
+	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+	border-radius: 0.2em;
 }
 select:hover {
-    cursor: pointer;
-} */
+	cursor: pointer;
+}
 </style>
