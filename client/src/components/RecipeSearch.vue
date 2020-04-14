@@ -1,78 +1,91 @@
 <template lang="html">
-  <div class="main-container">
-    <form v-on:submit.prevent="handleSearch" >
-        <label for="search_box" class="form-inline">Search: </label>
-        <input type="text" id="search_box" v-model="searchString" required/>
-        <label for="exclusion_box" class="form-inline">Exclude: </label>
-        <input type="text" id="exclusion_box" v-model="exclusionString"/>
-        <label for="dietary_choices" >Dietary Preference: </label>
-        <select id="dietary_choices" v-model="dietaryChoices">
-            <option value="none">none</option>
-            <option value="balanced">balanced</option>
-            <option value="high protein">high protein</option>
-            <option value="low-fat">low-fat</option>
-            <option value="low-carb ">low-carb </option>
-        </select>
-        <label for="health_choices" >Health Preference: </label>
-        <select id="health_choices" v-model="healthChoices">
-            <option value="none">none</option>
-            <option value="vegan">vegan</option>
-            <option value="vegetarian">vegetarian </option>
-            <option value="sugar-conscious">sugar-conscious</option>
-            <option value="peanut-free">peanut-free</option>
-            <option value="tree-nut-free">tree-nut-free</option>
-            <option value="alcohol-free">alcohol-free</option>
-        </select>
-        <input type="submit" value ="Search" class="button"/>
-    </form>
-
-  </div>
+	<div class="main-container">
+		<form v-on:submit.prevent="handleSearch">
+			<label for="search_box" class="form-inline">Ingredients: </label>
+			<input
+				type="text"
+				id="search_box"
+				v-model="searchString"
+				placeholder="example: Chicken"
+				required
+			/>
+			<label for="exclusion_box" class="form-inline">Exclude: </label>
+			<input
+				type="text"
+				id="exclusion_box"
+				v-model="exclusionString"
+				placeholder="example: Tomato"
+			/>
+			<label for="dietary_choices">Dietary Preference: </label>
+			<select id="dietary_choices" v-model="dietaryChoices">
+				<option value="none">none</option>
+				<option value="balanced">balanced</option>
+				<option value="high protein">high protein</option>
+				<option value="low-fat">low-fat</option>
+				<option value="low-carb ">low-carb </option>
+			</select>
+			<label for="health_choices">Health Preference: </label>
+			<select id="health_choices" v-model="healthChoices">
+				<option value="none">none</option>
+				<option value="vegan">vegan</option>
+				<option value="vegetarian">vegetarian </option>
+				<option value="sugar-conscious">sugar-conscious</option>
+				<option value="peanut-free">peanut-free</option>
+				<option value="tree-nut-free">tree-nut-free</option>
+				<option value="alcohol-free">alcohol-free</option>
+			</select>
+			<input type="submit" value="Search" class="button" />
+		</form>
+	</div>
 </template>
 
 <script>
-
 import { eventBus } from '../main.js';
 
 export default {
-    name: 'recipe-search',
-    data(){
-        return{
-            searchString: "",
-            exclusionString: "",
-            exclusionsArray: [],
-            dietaryChoices: 'none',
-            healthChoices: 'none'
-        }
-    },
-    methods: {
-        handleSearch(){
-            var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ",")
-            var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, "+")
-            
-            var exclusionStringWithoutCommaSpace = this.exclusionString.replace(/,\s?/g, ",")
-            var exclusionStringWithoutSpaces = exclusionStringWithoutCommaSpace.replace(/ /g, "+")
-            this.exclusionsArray = exclusionStringWithoutCommaSpace.split(',')
-          
-            eventBus.$emit('dietary-choices', this.dietaryChoices)
-            this.dietaryChoices = 'none'
+	name: 'recipe-search',
+	data() {
+		return {
+			searchString: '',
+			exclusionString: '',
+			exclusionsArray: [],
+			dietaryChoices: 'none',
+			healthChoices: 'none'
+		};
+	},
+	methods: {
+		handleSearch() {
+			var stringWithoutCommaSpace = this.searchString.replace(/,\s?/g, ',');
+			var stringWithoutSpaces = stringWithoutCommaSpace.replace(/ /g, '+');
 
-            eventBus.$emit('health-choices', this.healthChoices)
-            this.healthChoices = 'none'
+			var exclusionStringWithoutCommaSpace = this.exclusionString.replace(
+				/,\s?/g,
+				','
+			);
+			var exclusionStringWithoutSpaces = exclusionStringWithoutCommaSpace.replace(
+				/ /g,
+				'+'
+			);
+			this.exclusionsArray = exclusionStringWithoutCommaSpace.split(',');
 
-            eventBus.$emit('search-entered', stringWithoutSpaces)
-            this.searchString = "" 
+			eventBus.$emit('dietary-choices', this.dietaryChoices);
+			this.dietaryChoices = 'none';
 
-            eventBus.$emit('exclusion-entered', this.exclusionsArray)
-            this.exclusionString = ""
-            this.exclusionsArray = [] 
-        }
-    }
+			eventBus.$emit('health-choices', this.healthChoices);
+			this.healthChoices = 'none';
 
-}
+			eventBus.$emit('search-entered', stringWithoutSpaces);
+			this.searchString = '';
+
+			eventBus.$emit('exclusion-entered', this.exclusionsArray);
+			this.exclusionString = '';
+			this.exclusionsArray = [];
+		}
+	}
+};
 </script>
 
 <style scoped>
-
 /* input {
   vertical-align: middle;
   margin: 0px 20px 0px 10px;
@@ -125,5 +138,4 @@ select {
 select:hover {
     cursor: pointer;
 } */
-
 </style>
