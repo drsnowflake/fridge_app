@@ -3,15 +3,14 @@
 		<div class="column left">
 			<img id="recipe_image" :src="recipe.image" alt="recipe image " />
 			<br />
-			<button
+			<button 
 				class="button"
 				v-if="!favouritesCheck()"
 				v-on:click="addToFavourites()"
 				type="button"
 			>
 				Add to Favourites
-			</button>
-			<audio ref="audioElm" src="../assets/add_to_favourites.wav"></audio>
+			</button>		
 			<button
 				class="button"
 				v-if="favouritesCheck()"
@@ -22,10 +21,8 @@
 		</div>
 		<div class="column right">
 			<h3>{{ recipe.label }}</h3>
-			<p>
-				<u><b>Ingredients </b>(serves {{ recipe.yield }})</u>
-			</p>
 			<ul>
+				<li id="ingredient_list"><u><b>Ingredients </b>(serves {{ recipe.yield }})</u></li>
 				<li
 					id="ingredient_list"
 					v-for="(ingredient, index) in recipe.ingredientLines"
@@ -38,7 +35,7 @@
 			<br />
 			<p>
 				Find the full recipe
-				<a :href="recipe.url" target="_blank" rel="noreferrer noopener">here</a>
+				<a :href="recipe.url" target="_blank" rel="noreferrer noopener"><b>here</b></a>
 			</p>
 		</div>
 	</div>
@@ -51,13 +48,14 @@ export default {
 	name: 'recipe-item',
 	props: ['recipe', 'favourites'],
 	methods: {
+		
 		favouritesCheck: function() {
 			let match = false;
 			this.favourites.forEach(element => {
 				if (element.recipe_uri === this.recipe.uri) {
 					this.recipe._id = element._id;
-					match = true;
-				}
+					return match = true;
+				}	
 			});
 			return match;
 		},
@@ -66,7 +64,6 @@ export default {
 		},
 		addToFavourites() {
 			eventBus.$emit('new-favourite', this.recipe);
-			// this.$refs.audioElm.play();
 		},
 		removeFromFavourites() {
 			eventBus.$emit('remove-favourite', this.recipe);
@@ -97,6 +94,7 @@ export default {
 
 .right {
 	width: 65%;
+	padding: 20px;
 }
 
 #recipe_image {
@@ -124,5 +122,15 @@ export default {
 	background-color: #897475;
 	color: white;
 	cursor: pointer;
+}
+
+a{
+	color: #494d4e;
+}
+
+h3 {
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
+	margin: 0px 0px 15px 0px;
 }
 </style>

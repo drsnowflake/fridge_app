@@ -37,8 +37,9 @@ select {
 	padding: 10px;
 	margin: 0px 20px 0px 10px;
 	border: 1px solid #aaa;
-	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+	box-shadow: 1px 1px 1px 1px rgba(250, 212, 214, 0.5);
 	border-radius: 0.2em;
+	min-width: 300px;
 }
 select:hover {
 	cursor: pointer;

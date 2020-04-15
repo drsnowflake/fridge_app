@@ -92,11 +92,14 @@ input {
 	padding: 5px;
 	background-color: #f8f8f8;
 	border: 1px solid #aaa;
-	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+	/* box-shadow: 0 1px 0 1px #fad4d6 0.04; */
+	box-shadow: 1px 1px 1px 1px rgba(250, 212, 214, 0.5);
+	/* box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04); */
 	color: #444;
 	font-size: 14px;
 	font-family: sans-serif;
 	font-weight: 300;
+	border-radius: 0.2em;
 }
 
 label {
@@ -131,7 +134,8 @@ select {
 	padding: 10px;
 	margin: 0px 20px 0px 10px;
 	border: 1px solid #aaa;
-	box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
+	/* box-shadow: 0 1px 0 1px #fad4d6 0.04; */
+	box-shadow: 1px 1px 1px 1px rgba(250, 212, 214, 0.5);
 	border-radius: 0.2em;
 }
 select:hover {

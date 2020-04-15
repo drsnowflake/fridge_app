@@ -20,9 +20,9 @@
 				<h3>Shopping List</h3>
 				<ul>
 					<li
-						v-for="ingredient in selectedRecipe.ingredientLines"
+						v-for="(ingredient,index) in selectedRecipe.ingredientLines"
 						:ingredient="ingredient"
-						:key="ingredient"
+						:key="index"
 						@click="$event.target.classList.toggle('highlight')"
 					>
 						{{ ingredient }}
@@ -376,7 +376,11 @@ export default {
 	props: ['selectedRecipe'],
 	data() {
 		return {
-			pageload: ''
+			pageLoad: {
+				currentTarget: {
+					className: ''
+				}
+			}
 		};
 	},
 	mounted() {
@@ -417,24 +421,28 @@ export default {
 
 /* Style the buttons that are used to open the tab content */
 .tab button {
-	background-color: inherit;
+	background-color: #fff1f1;
 	float: left;
 	border: none;
 	outline: none;
 	cursor: pointer;
-	padding: 14px 16px;
+	padding: 10px 10px;
 	transition: 0.3s;
 	width: 50%;
+	color: #494d4e;
+	font-family: 'Libre Franklin', 'Helvetica Neue', helvetica, arial, sans-serif;
+	font-size: 12px;
 }
+
 
 /* Change background color of buttons on hover */
 .tab button:hover {
-	background-color: #ddd;
+	background-color: #897475;
 }
 
 /* Create an active/current tablink class */
 .tab button.active {
-	background-color: #ccc;
+	background-color: #fad4d6;
 }
 
 /* Style the tab content */

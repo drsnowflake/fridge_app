@@ -12,9 +12,8 @@ export default {
 		}).then((res) => res.json());
 	},
 	removeFavourite(id) {
-		console.log(id)
 		return fetch(baseURL + id, {
 			method: 'DELETE',
-		});
+		}).then((res) => res.json());
 	},
 };

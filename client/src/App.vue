@@ -1,6 +1,6 @@
 <template>
 	<div class="grid-container-main">
-		<div class="grid-item-heading"><h2>Recipe Finder</h2></div>
+		<div class="grid-item-heading"><h2>What's in my Fridge? <i>Recipe Finder</i></h2></div>
 
 		<div class="grid-item-search">
 			<recipe-search></recipe-search>
@@ -8,7 +8,6 @@
 		<div class="grid-item-favourites">
 			<favourite-select
 				:favourites="favouriteRecipes"
-				:key="favouriteRecipes.length"
 			></favourite-select>
 		</div>
 		<div class="grid-item-blank-line"></div>
@@ -23,7 +22,6 @@
 				<recipe-list
 					:favourites="favouriteRecipes"
 					:recipeList="recipes"
-					:key="favouriteRecipes.length"
 				></recipe-list>
 			</div>
 		</div>
@@ -55,8 +53,6 @@ export default {
 			exclusionsArray: [],
 			dietaryChoice: '',
 			healthChoice: '',
-			// newFavourite: null,
-			// removeFavourite: null,
 			favouriteRecipes: [],
 			selectedFavourite: '',
 			componentKey: 0,
@@ -88,33 +84,16 @@ export default {
 		});
 
 		eventBus.$on('new-favourite', recipe => {
-			// this.newFavourite = recipe
 			this.addNewFavourite(recipe);
 		});
 
 		eventBus.$on('remove-favourite', recipe => {
-			// this.removeFavourite = recipe
 			this.removeSelectedFavourite(recipe);
 		});
 
 		eventBus.$on('favourite-selected', favourite => {
 			this.selectedFavourite = favourite;
-			this.getFavourite();
 		});
-	},
-	watch: {
-		// newFavourite: function (oldValue, newValue){
-		//    this.addNewFavourite(this.newFavourite)
-		// },
-		// removeFavourite: function (oldValue, newValue){
-		//    this.removeSelectedFavourite(this.removeFavourite)
-		// },
-		// searchString: function (oldValue, newValue){
-		//   this.getRecipes()
-		// },
-		// selectedFavourite: function (oldValue, newValue){
-		//   this.getFavourite()
-		// }
 	},
 	components: {
 		'recipe-search': RecipeSearch,
@@ -125,9 +104,6 @@ export default {
 		'no-recipe-found': NoRecipeFound
 	},
 	methods: {
-		forceRender() {
-			this.componentKey += 1;
-		},
 		getFavourite() {
 			this.recipes = [];
 			let fetchURL = '';
@@ -182,15 +158,14 @@ export default {
 				name: recipe.label,
 				recipe_uri: recipe.uri
 			};
-			FavouriteService.addFavourite(payload).then(res =>
-				this.favouriteRecipes.push(res)
-			);
+			FavouriteService.addFavourite(payload)
+			.then(res => this.favouriteRecipes.push(res))
 		},
 		removeSelectedFavourite(recipe) {
 			let id = recipe._id;
-			FavouriteService.removeFavourite(id).then(res =>
-				this.favouriteRecipes.filter(item => item._id != id)
-			);
+			// this.favouriteRecipes.filter(item => item._id != id)
+			FavouriteService.removeFavourite(id)
+			.then(res => this.favouriteRecipes = res)
 		}
 	}
 };
@@ -252,11 +227,13 @@ p {
 	border-radius: 20px;
 	padding: 15px;
 	margin-bottom: 30px;
+	font-family: helvetica, arial, sans-serif;
 }
 
 .grid-item-shopping-list {
-	grid-area: 7 / 15 / span 15 / span 5;
+	grid-area: 6 / 15 / span 15 / span 5;
 	background-color: rgba(255, 255, 255, 0);
+	font-family: helvetica, arial, sans-serif;
 }
 
 h1 {
