@@ -66,11 +66,6 @@ export default {
 			this.selectedRecipe = recipe;
 		});
 
-		eventBus.$on('search-entered', search => {
-			this.searchString = search;
-			this.getRecipes();
-		});
-
 		eventBus.$on('exclusion-entered', excludedIngredients => {
 			this.exclusionsArray = excludedIngredients;
 		});
@@ -94,6 +89,11 @@ export default {
 		eventBus.$on('favourite-selected', favourite => {
 			this.selectedFavourite = favourite;
 		});
+
+		eventBus.$on('search-entered', search => {
+			this.searchString = search;
+			// this.getRecipes();
+		});
 	},
 	components: {
 		'recipe-search': RecipeSearch,
@@ -102,6 +102,14 @@ export default {
 		'favourite-select': FavouriteSelect,
 		'instruction-view': InstructionView,
 		'no-recipe-found': NoRecipeFound
+	},
+	watch: {
+		searchString: function (oldValue, newValue){
+      		this.getRecipes()
+		}
+		// exclusionsArray: function (oldValue, newValue){
+      	// 	this.getRecipes()
+    	// }
 	},
 	methods: {
 		getFavourite() {
@@ -121,6 +129,7 @@ export default {
 			this.loaded = false;
 			this.recipes = [];
 			let URL = this.buildFetchURL();
+			console.log(URL);
 			fetch(URL)
 				.then(results => results.json())
 				.then(json =>

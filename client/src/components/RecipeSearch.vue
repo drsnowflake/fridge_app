@@ -74,10 +74,10 @@ export default {
 			eventBus.$emit('health-choices', this.healthChoices);
 			this.healthChoices = 'none';
 
+			eventBus.$emit('exclusion-entered', this.exclusionsArray);
+			
 			eventBus.$emit('search-entered', stringWithoutSpaces);
 			this.searchString = '';
-
-			eventBus.$emit('exclusion-entered', this.exclusionsArray);
 			this.exclusionString = '';
 			this.exclusionsArray = [];
 		}
