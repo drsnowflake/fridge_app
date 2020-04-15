@@ -74,6 +74,7 @@ export default {
 			eventBus.$emit('health-choices', this.healthChoices);
 			this.healthChoices = 'none';
 
+			console.log(this.exclusionsArray)
 			eventBus.$emit('exclusion-entered', this.exclusionsArray);
 			
 			eventBus.$emit('search-entered', stringWithoutSpaces);

@@ -66,16 +66,7 @@ export default {
 			this.selectedRecipe = recipe;
 		});
 
-<<<<<<< HEAD
 		eventBus.$on('exclusion-entered', excludedIngredients => {
-=======
-		eventBus.$on('search-entered', (search) => {
-			this.searchString = search;
-			this.getRecipes();
-		});
-
-		eventBus.$on('exclusion-entered', (excludedIngredients) => {
->>>>>>> 1fcac6028a2b3a726103b8ab63216815b5d35970
 			this.exclusionsArray = excludedIngredients;
 		});
 
@@ -97,11 +88,12 @@ export default {
 
 		eventBus.$on('favourite-selected', (favourite) => {
 			this.selectedFavourite = favourite;
+			this.getFavourite();
 		});
 
 		eventBus.$on('search-entered', search => {
 			this.searchString = search;
-			// this.getRecipes();
+			this.getRecipes();
 		});
 	},
 	components: {
@@ -112,16 +104,17 @@ export default {
 		'instruction-view': InstructionView,
 		'no-recipe-found': NoRecipeFound,
 	},
-	watch: {
-		searchString: function (oldValue, newValue){
-      		this.getRecipes()
-		}
-		// exclusionsArray: function (oldValue, newValue){
-      	// 	this.getRecipes()
-    	// }
-	},
+	// watch: {
+	// 	searchString: function (oldValue, newValue){
+	// 		  this.getRecipes()
+	// 	}
+	// 	// exclusionsArray: function (oldValue, newValue){
+    //   	// 	this.getRecipes()
+    // 	// }
+	// },
 	methods: {
 		getFavourite() {
+			this.loaded = false;
 			this.recipes = [];
 			let fetchURL = '';
 			const splitURI = this.selectedFavourite.split('#');
@@ -132,6 +125,7 @@ export default {
 			fetch(fetchURL)
 				.then((res) => res.json())
 				.then((json) => this.recipes.push(json[0]))
+				.then((res) => (this.loaded = true))
 				.catch((err) => console.log(err));
 		},
 		getRecipes() {
@@ -152,11 +146,12 @@ export default {
 			if (this.searchString != '') {
 				fetchURL += 'q=' + this.searchString;
 			}
-			if (this.exclusionsArray.length > 0) {
+			if (this.exclusionsArray[0] != "") {
 				this.exclusionsArray.forEach((ingredient) => {
 					fetchURL += '&excluded=' + ingredient;
 				});
 			}
+			this.exclusionsArray = []
 			if (this.dietaryChoice != 'none') {
 				fetchURL += '&diet=' + this.dietaryChoice;
 			}
