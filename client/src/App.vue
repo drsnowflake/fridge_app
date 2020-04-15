@@ -1,14 +1,14 @@
 <template>
 	<div class="grid-container-main">
-		<div class="grid-item-heading"><h2>What's in my Fridge? <i>Recipe Finder</i></h2></div>
+		<div class="grid-item-heading">
+			<h2>What's in my Fridge? <i>Recipe Finder</i></h2>
+		</div>
 
 		<div class="grid-item-search">
 			<recipe-search></recipe-search>
 		</div>
 		<div class="grid-item-favourites">
-			<favourite-select
-				:favourites="favouriteRecipes"
-			></favourite-select>
+			<favourite-select :favourites="favouriteRecipes"></favourite-select>
 		</div>
 		<div class="grid-item-blank-line"></div>
 		<div class="grid-item-recipes">
@@ -56,37 +56,46 @@ export default {
 			favouriteRecipes: [],
 			selectedFavourite: '',
 			componentKey: 0,
-			loaded: false
+			loaded: false,
 		};
 	},
 	mounted() {
 		this.fetchFavourites();
 
-		eventBus.$on('recipe-selected', recipe => {
+		eventBus.$on('recipe-selected', (recipe) => {
 			this.selectedRecipe = recipe;
 		});
 
+<<<<<<< HEAD
 		eventBus.$on('exclusion-entered', excludedIngredients => {
+=======
+		eventBus.$on('search-entered', (search) => {
+			this.searchString = search;
+			this.getRecipes();
+		});
+
+		eventBus.$on('exclusion-entered', (excludedIngredients) => {
+>>>>>>> 1fcac6028a2b3a726103b8ab63216815b5d35970
 			this.exclusionsArray = excludedIngredients;
 		});
 
-		eventBus.$on('dietary-choices', choice => {
+		eventBus.$on('dietary-choices', (choice) => {
 			this.dietaryChoice = choice;
 		});
 
-		eventBus.$on('health-choices', choice => {
+		eventBus.$on('health-choices', (choice) => {
 			this.healthChoice = choice;
 		});
 
-		eventBus.$on('new-favourite', recipe => {
+		eventBus.$on('new-favourite', (recipe) => {
 			this.addNewFavourite(recipe);
 		});
 
-		eventBus.$on('remove-favourite', recipe => {
+		eventBus.$on('remove-favourite', (recipe) => {
 			this.removeSelectedFavourite(recipe);
 		});
 
-		eventBus.$on('favourite-selected', favourite => {
+		eventBus.$on('favourite-selected', (favourite) => {
 			this.selectedFavourite = favourite;
 		});
 
@@ -101,7 +110,7 @@ export default {
 		'shopping-list': ShoppingList,
 		'favourite-select': FavouriteSelect,
 		'instruction-view': InstructionView,
-		'no-recipe-found': NoRecipeFound
+		'no-recipe-found': NoRecipeFound,
 	},
 	watch: {
 		searchString: function (oldValue, newValue){
@@ -121,9 +130,9 @@ export default {
 				splitURI[1] +
 				`&app_id=${process.env.VUE_APP_RECIPE_ID}&app_key=${process.env.VUE_APP_RECIPE_KEY}`;
 			fetch(fetchURL)
-				.then(res => res.json())
-				.then(json => this.recipes.push(json[0]))
-				.catch(err => console.log(err));
+				.then((res) => res.json())
+				.then((json) => this.recipes.push(json[0]))
+				.catch((err) => console.log(err));
 		},
 		getRecipes() {
 			this.loaded = false;
@@ -131,12 +140,12 @@ export default {
 			let URL = this.buildFetchURL();
 			console.log(URL);
 			fetch(URL)
-				.then(results => results.json())
-				.then(json =>
-					json.hits.forEach(recipe => this.recipes.push(recipe.recipe))
+				.then((results) => results.json())
+				.then((json) =>
+					json.hits.forEach((recipe) => this.recipes.push(recipe.recipe))
 				)
-				.then(res => (this.loaded = true))
-				.catch(err => console.log(err));
+				.then((res) => (this.loaded = true))
+				.catch((err) => console.log(err));
 		},
 		buildFetchURL() {
 			let fetchURL = 'https://api.edamam.com/search?';
@@ -144,7 +153,7 @@ export default {
 				fetchURL += 'q=' + this.searchString;
 			}
 			if (this.exclusionsArray.length > 0) {
-				this.exclusionsArray.forEach(ingredient => {
+				this.exclusionsArray.forEach((ingredient) => {
 					fetchURL += '&excluded=' + ingredient;
 				});
 			}
@@ -159,24 +168,25 @@ export default {
 		},
 		fetchFavourites() {
 			FavouriteService.getFavourites().then(
-				res => (this.favouriteRecipes = res)
+				(res) => (this.favouriteRecipes = res)
 			);
 		},
 		addNewFavourite(recipe) {
 			let payload = {
 				name: recipe.label,
-				recipe_uri: recipe.uri
+				recipe_uri: recipe.uri,
 			};
-			FavouriteService.addFavourite(payload)
-			.then(res => this.favouriteRecipes.push(res))
+			FavouriteService.addFavourite(payload).then((res) =>
+				this.favouriteRecipes.push(res)
+			);
 		},
 		removeSelectedFavourite(recipe) {
 			let id = recipe._id;
-			// this.favouriteRecipes.filter(item => item._id != id)
-			FavouriteService.removeFavourite(id)
-			.then(res => this.favouriteRecipes = res)
-		}
-	}
+			FavouriteService.removeFavourite(id).then(
+				(res) => (this.favouriteRecipes = res)
+			);
+		},
+	},
 };
 </script>
 
