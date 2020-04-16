@@ -244,6 +244,10 @@ p {
 	font-family: helvetica, arial, sans-serif;
 }
 
+.grid-item-recipe:hover{
+	cursor: pointer;
+}
+
 .grid-item-shopping-list {
 	grid-area: 6 / 15 / span 15 / span 5;
 	background-color: rgba(255, 255, 255, 0);
