@@ -121,6 +121,7 @@ export default {
 			this.loaded = false;
 			this.recipes = [];
 			let URL = this.buildFetchURL();
+			console.log(URL);
 			fetch(URL)
 				.then((results) => results.json())
 				.then((json) =>
