@@ -20,15 +20,15 @@
 			<select id="dietary_choices" v-model="dietaryChoices">
 				<option value="none">none</option>
 				<option value="balanced">balanced</option>
-				<option value="high protein">high protein</option>
+				<option value="high-protein">high-protein</option>
 				<option value="low-fat">low-fat</option>
-				<option value="low-carb ">low-carb </option>
+				<option value="low-carb">low-carb </option>
 			</select>
 			<label for="health_choices">Diet: </label>
 			<select id="health_choices" v-model="healthChoices">
 				<option value="none">none</option>
 				<option value="vegan">vegan</option>
-				<option value="vegetarian">vegetarian </option>
+				<option value="vegetarian">vegetarian</option>
 				<option value="sugar-conscious">sugar-conscious</option>
 				<option value="peanut-free">peanut-free</option>
 				<option value="tree-nut-free">tree-nut-free</option>
@@ -74,10 +74,11 @@ export default {
 			eventBus.$emit('health-choices', this.healthChoices);
 			this.healthChoices = 'none';
 
+			console.log(this.exclusionsArray)
+			eventBus.$emit('exclusion-entered', this.exclusionsArray);
+			
 			eventBus.$emit('search-entered', stringWithoutSpaces);
 			this.searchString = '';
-
-			eventBus.$emit('exclusion-entered', this.exclusionsArray);
 			this.exclusionString = '';
 			this.exclusionsArray = [];
 		}

@@ -66,12 +66,7 @@ export default {
 			this.selectedRecipe = recipe;
 		});
 
-		eventBus.$on('search-entered', (search) => {
-			this.searchString = search;
-			this.getRecipes();
-		});
-
-		eventBus.$on('exclusion-entered', (excludedIngredients) => {
+		eventBus.$on('exclusion-entered', excludedIngredients => {
 			this.exclusionsArray = excludedIngredients;
 		});
 
@@ -93,6 +88,12 @@ export default {
 
 		eventBus.$on('favourite-selected', (favourite) => {
 			this.selectedFavourite = favourite;
+			this.getFavourite();
+		});
+
+		eventBus.$on('search-entered', search => {
+			this.searchString = search;
+			this.getRecipes();
 		});
 	},
 	components: {
@@ -103,8 +104,17 @@ export default {
 		'instruction-view': InstructionView,
 		'no-recipe-found': NoRecipeFound,
 	},
+	// watch: {
+	// 	searchString: function (oldValue, newValue){
+	// 		  this.getRecipes()
+	// 	}
+	// 	// exclusionsArray: function (oldValue, newValue){
+    //   	// 	this.getRecipes()
+    // 	// }
+	// },
 	methods: {
 		getFavourite() {
+			this.loaded = false;
 			this.recipes = [];
 			let fetchURL = '';
 			const splitURI = this.selectedFavourite.split('#');
@@ -115,6 +125,7 @@ export default {
 			fetch(fetchURL)
 				.then((res) => res.json())
 				.then((json) => this.recipes.push(json[0]))
+				.then((res) => (this.loaded = true))
 				.catch((err) => console.log(err));
 		},
 		getRecipes() {
@@ -135,11 +146,12 @@ export default {
 			if (this.searchString != '') {
 				fetchURL += 'q=' + this.searchString;
 			}
-			if (this.exclusionsArray.length > 0) {
+			if (this.exclusionsArray[0] != "") {
 				this.exclusionsArray.forEach((ingredient) => {
 					fetchURL += '&excluded=' + ingredient;
 				});
 			}
+			this.exclusionsArray = []
 			if (this.dietaryChoice != 'none') {
 				fetchURL += '&diet=' + this.dietaryChoice;
 			}
@@ -230,6 +242,10 @@ p {
 	padding: 15px;
 	margin-bottom: 30px;
 	font-family: helvetica, arial, sans-serif;
+}
+
+.grid-item-recipe:hover{
+	cursor: pointer;
 }
 
 .grid-item-shopping-list {
